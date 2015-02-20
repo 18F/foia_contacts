@@ -19,6 +19,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '2#ut(&jmo_1j+d_qq-1ml(qypyk+-cb4d&s33sl9mp01lr7i*^'
 
+TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'templates'), )
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 

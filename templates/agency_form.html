@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h2>{{agency_data.name}}</h2>
+    <div contentEditable="true">
+        {{agency_data.phone}}
+    </div>
+    {% if office_data %}
+    {% for office in office_data %}
+        <h3>{{office.name}}</h3>
+        <div contentEditable="true">
+            Phone: {{office.phone}}
+        </div>
+    {% endfor %}
+    {% endif %}
+  </body>
+</html>
