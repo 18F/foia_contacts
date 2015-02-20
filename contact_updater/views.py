@@ -3,9 +3,14 @@ import json
 import time
 
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotFound
 
-SITE = "https://foia.18f.us/api/{0}/{1}/"
+SITE = "https://foia.18f.us/api/"
+
+
+def index(request):
+    r = requests.get(SITE + 'agency/')
+    return render(request, "index.html", {'agencies': r.json()['objects']})
 
 
 def download_data(request, slug):
@@ -26,15 +31,19 @@ def prepopulate_agency(request, slug):
 
     if request.method == 'POST':
         return download_data(request=request, slug=slug)
-    r = requests.get(SITE.format('agency', slug))
+
+    r = requests.get(SITE + 'agency/%s/' % slug)
+    if r.status_code == 404:
+        return HttpResponseNotFound('<h1>No Agency Found</h1>')
+
     agency_data = r.json()
     office_data = []
     if agency_data.get('offices'):
         for office in agency_data['offices']:
-            kind = 'office'
+            kind = 'office/'
             if '--' not in office.get('slug'):
-                kind = 'agency'
-            r = requests.get(SITE.format(kind, office.get('slug')))
+                kind = 'agency/'
+            r = requests.get(SITE + kind + office.get('slug') )
             office_data.append(r.json())
     return render(
         request,
