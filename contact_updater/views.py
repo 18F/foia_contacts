@@ -36,6 +36,7 @@ def get_agency_data(slug):
     r = requests.get(SITE + 'agency/%s/' % slug)
     if r.status_code == 200:
         agency_data = [r.json()]
+        print(agency_data[0].keys())
         if agency_data[0].get('offices'):
             for office in agency_data[0]['offices']:
                 kind = 'office/'
