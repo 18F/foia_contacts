@@ -1,17 +1,13 @@
-<!DOCTYPE html>
-<html>
-  <body>
+<form action="" method="post">
+    {% csrf_token %}
     <h2>{{agency_data.name}}</h2>
-    <div contentEditable="true">
-        {{agency_data.phone}}
-    </div>
+    Phone: <input name="{{agency_data.slug}}_phone" type="text" value="{{agency_data.phone}}">
+
     {% if office_data %}
-    {% for office in office_data %}
-        <h3>{{office.name}}</h3>
-        <div contentEditable="true">
-            Phone: {{office.phone}}
-        </div>
-    {% endfor %}
+        {% for office in office_data %}
+            <h3>{{office.name}}</h3>
+                    Phone: <input name="{{office.slug}}_phone" type="text" value="{{office.phone}}">
+        {% endfor %}
     {% endif %}
-  </body>
-</html>
+    <input type="submit" value="Submit" />
+</form>
