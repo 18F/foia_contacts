@@ -11,6 +11,12 @@
     }
 </script>
 
+<!-- Macro -->
+{% macro make_field(name, value='', type='text', size=20) -%}
+    <input type="{{ type }}" name="{{ name }}" value="{{
+        value|e }}" size="{{ size }}">
+{%- endmacro %}
+
 <h2>{{agency_data.name}}</h2>
 Phone: <div class="data" name="{{agency_data.slug}}_phone" contenteditable="true">{{agency_data.phone}}</div>
 
