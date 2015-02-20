@@ -10,6 +10,7 @@ SITE = "https://foia.18f.us/api/{0}/{1}/"
 def download_data(request, slug):
     """ Converts POST request into json file ready for download """
     data = dict(request.POST)
+    print(data)
     del data['csrfmiddlewaretoken']
     res = HttpResponse(json.dumps(data))
     res['Content-Disposition'] = 'attachment; filename=%s.json' % slug
