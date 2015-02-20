@@ -1,5 +1,6 @@
 import requests
 import json
+import time
 
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -10,7 +11,7 @@ SITE = "https://foia.18f.us/api/{0}/{1}/"
 def download_data(request, slug):
     """ Converts POST request into json file ready for download """
     data = dict(request.POST)
-    print(data)
+    data['timestamp'] = int(time.time())
     del data['csrfmiddlewaretoken']
     res = HttpResponse(json.dumps(data))
     res['Content-Disposition'] = 'attachment; filename=%s.json' % slug
