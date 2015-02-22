@@ -1,10 +1,14 @@
 <form action="" method="post">
     {% csrf_token %}
     {{management_form}}
+
     {% for agency, form in data %}
         <h2>{{agency.name}}</h2>
-        {{form.as_table}}
+        <table>
+            {{form.as_table}}
+        </table>
     {% endfor %}
+
     <br>
      <input type="submit" value="Submit" />
 </form>

@@ -2,7 +2,7 @@ from django import forms
 
 
 class AgencyData(forms.Form):
-    description = forms.CharField(required=False)
+    description = forms.CharField(required=False, widget=forms.Textarea)
     public_liaison_email = forms.EmailField(required=False)
     emails = forms.CharField(required=False)
     phone = forms.RegexField(
@@ -20,15 +20,15 @@ class AgencyData(forms.Form):
     request_form_url = forms.URLField(required=False)
     # Will need to reformat the value
     foia_libraries = forms.CharField(required=False)
-    address_lines = forms.CharField(required=False)
+    address_lines = forms.CharField(required=False, widget=forms.Textarea)
     street = forms.CharField(required=False)
     state = forms.CharField(required=False)
     city = forms.CharField(required=False)
     zip_code = forms.CharField(required=False)
     office_url = forms.URLField(required=False)
-    common_requests = forms.CharField(required=False)
-    no_records_about = forms.CharField(required=False)
-    person_name = forms.CharField(required=False)
+    common_requests = forms.CharField(required=False, widget=forms.Textarea)
+    no_records_about = forms.CharField(required=False,  widget=forms.Textarea)
+    # person_name = forms.CharField(required=False)
     public_liaison_name = forms.CharField(required=False)
     fax = forms.RegexField(
         required=False,

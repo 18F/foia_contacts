@@ -27,6 +27,35 @@ def download_data(request, slug):
     res['Content-Disposition'] = 'attachment; filename=%s.json' % slug
     return res
 
+def get_first_array(array):
+    """ Given a list returns first element """
+
+    if array:
+        return array[0]
+
+def unpack_libraries(libraries):
+    """ Given a list of libraries returns url """
+
+    if libraries:
+        return libraries[0].get('url')
+
+def join_array(array):
+    """ Joins array feilds using `\n` """
+    if array:
+        return "\n".join(array)
+
+def transform_data(data):
+    """ Returns only first email """
+
+    data['emails'] = get_first_array(data.get('emails'))
+    data['foia_libraries'] = unpack_libraries(data.get('foia_libraries'))
+    data['common_requests'] = join_array(data.get('common_requests'))
+    data['no_records_about'] = join_array(data.get('no_records_about'))
+    data['address_lines'] = join_array(data.get('address_lines'))
+    # data['person_name'] = data.get('person_name', '').replace('Phone: ', '')
+
+    return data
+
 def get_agency_data(slug):
     """
     Given an agency slug parse through the agency API and collect agency
@@ -35,15 +64,14 @@ def get_agency_data(slug):
 
     r = requests.get(SITE + 'agency/%s/' % slug)
     if r.status_code == 200:
-        agency_data = [r.json()]
-        print(agency_data[0].keys())
+        agency_data = [transform_data(r.json())]
         if agency_data[0].get('offices'):
             for office in agency_data[0]['offices']:
                 kind = 'office/'
                 if '--' not in office.get('slug'):
                     kind = 'agency/'
                 r = requests.get(SITE + kind + office.get('slug') )
-                agency_data.append(r.json())
+                agency_data.append(transform_data(r.json()))
         return agency_data
 
 def prepopulate_agency(request, slug):
