@@ -6,7 +6,7 @@ from contact_updater.forms import AgencyData
 
 from django.forms.formsets import formset_factory
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse
 
 
 SITE = "https://foia.18f.us/api/"
@@ -27,11 +27,13 @@ def download_data(request, slug):
     res['Content-Disposition'] = 'attachment; filename=%s.json' % slug
     return res
 
+
 def get_first_array(array):
     """ Given a list returns first element """
 
     if array:
         return array[0]
+
 
 def unpack_libraries(libraries):
     """ Given a list of libraries returns url """
@@ -39,10 +41,12 @@ def unpack_libraries(libraries):
     if libraries:
         return libraries[0].get('url')
 
+
 def join_array(array):
     """ Joins array feilds using `\n` """
     if array:
         return "\n".join(array)
+
 
 def transform_data(data):
     """ Returns only first email """
@@ -55,6 +59,7 @@ def transform_data(data):
     # data['person_name'] = data.get('person_name', '').replace('Phone: ', '')
 
     return data
+
 
 def get_agency_data(slug):
     """
@@ -70,9 +75,10 @@ def get_agency_data(slug):
                 kind = 'office/'
                 if '--' not in office.get('slug'):
                     kind = 'agency/'
-                r = requests.get(SITE + kind + office.get('slug') )
+                r = requests.get(SITE + kind + office.get('slug'))
                 agency_data.append(transform_data(r.json()))
         return agency_data
+
 
 def prepopulate_agency(request, slug):
     """
@@ -80,22 +86,22 @@ def prepopulate_agency(request, slug):
     populate the form. If POST request responds an attachment
     """
 
-    AgencyFormSet = formset_factory(AgencyData)
-
+    agency_form_set = formset_factory(AgencyData)
     # I think we'll need a special endpoint for this
     # looping though multiple pages is taking too long
     agency_data = get_agency_data(slug=slug)
-
+    downloaded = False
     if request.method == "GET":
-        formset = AgencyFormSet(initial=agency_data)
+        formset = agency_form_set(initial=agency_data)
 
     elif request.method == 'POST':
-        formset = AgencyFormSet(request.POST)
+        formset = agency_form_set(request.POST)
         if formset.is_valid():
-            return download_data(request=request, slug=slug)
+            res = download_data(request=request, slug=slug)
+            return res
 
     management_form = formset.management_form
-
+    print(downloaded)
     return render(
         request,
         "agency_form.html",
@@ -103,5 +109,3 @@ def prepopulate_agency(request, slug):
             'data': zip(agency_data, formset),
             'management_form': management_form,
         })
-
-
