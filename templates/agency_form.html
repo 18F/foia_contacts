@@ -8,15 +8,20 @@
     {{management_form}}
     {% if validated %}
     <div style="display:none">
-    <input type="hidden" name="download" value="True">
     {% endif %}
     {% for agency, form in data %}
         <h2>{{agency.name}}</h2>
-        <table>
-            {{form.as_table}}
-        </table>
+        {% for input in form %}
+            {{input}}
+        {% endfor %}
     {% endfor %}
     <br>
     </div>
-     <input type="submit" value="Submit" />
+    {% if validated %}
+     <input type="submit" name="download" value="Download">
+     <input type="submit" name="return" value="Return" />
+    {% else %}
+    <input type="submit" value="Finished" />
+    {% endif %}
+
 </form>

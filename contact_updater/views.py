@@ -96,9 +96,11 @@ def prepopulate_agency(request, slug):
     elif request.method == 'POST':
         formset = agency_form_set(request.POST)
         if formset.is_valid():
+            return_data['validated'] = True
             if request.POST.get('download'):
                 return download_data(request=request, slug=slug)
-            return_data['validated'] = True
+            elif request.POST.get('return'):
+                return_data['validated'] = False
 
     management_form = formset.management_form
     return_data.update(
