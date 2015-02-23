@@ -83,3 +83,18 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),
+)
+
+
+# # JINJA SETTINGS
+TEMPLATE_LOADERS = (
+    'django_jinja.loaders.AppLoader',
+    'django_jinja.loaders.FileSystemLoader',
+)
+INSTALLED_APPS += ('django_jinja',)
+
+DEFAULT_JINJA2_TEMPLATE_EXTENSION = '.html'
