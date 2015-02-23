@@ -1,14 +1,22 @@
+
+{% if validated  %}
+    <h3>Instructions</h3>
+{% endif %}
+
 <form action="" method="post">
     {% csrf_token %}
     {{management_form}}
-
+    {% if validated %}
+    <div style="display:none">
+    <input type="hidden" name="download" value="True">
+    {% endif %}
     {% for agency, form in data %}
         <h2>{{agency.name}}</h2>
         <table>
             {{form.as_table}}
         </table>
     {% endfor %}
-
     <br>
+    </div>
      <input type="submit" value="Submit" />
 </form>

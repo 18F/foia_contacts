@@ -23,7 +23,7 @@ def download_data(request, slug):
     data = dict(request.POST)
     data['timestamp'] = int(time.time())
     del data['csrfmiddlewaretoken']
-    res = HttpResponse(json.dumps(data))
+    res = HttpResponse(json.dumps(data), content_type="application/javascript")
     res['Content-Disposition'] = 'attachment; filename=%s.json' % slug
     return res
 
@@ -85,27 +85,25 @@ def prepopulate_agency(request, slug):
     If GET request Collects agency and office data from foia_hub to
     populate the form. If POST request responds an attachment
     """
-
+    return_data = {}
     agency_form_set = formset_factory(AgencyData)
     # I think we'll need a special endpoint for this
     # looping though multiple pages is taking too long
     agency_data = get_agency_data(slug=slug)
-    downloaded = False
     if request.method == "GET":
         formset = agency_form_set(initial=agency_data)
 
     elif request.method == 'POST':
         formset = agency_form_set(request.POST)
         if formset.is_valid():
-            res = download_data(request=request, slug=slug)
-            return res
+            if request.POST.get('download'):
+                return download_data(request=request, slug=slug)
+            return_data['validated'] = True
 
     management_form = formset.management_form
-    print(downloaded)
-    return render(
-        request,
-        "agency_form.html",
+    return_data.update(
         {
             'data': zip(agency_data, formset),
             'management_form': management_form,
         })
+    return render(request, "agency_form.html", return_data)
