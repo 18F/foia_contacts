@@ -1,10 +1,8 @@
-from django.conf.urls import patterns, include, url
-from django.contrib import admin
+from django.conf.urls import patterns, url
+from contact_updater.views import prepopulate_agency, index
 
-urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'contact_updater.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
-
-    url(r'^admin/', include(admin.site.urls)),
+urlpatterns = patterns(
+    '',
+    url(r'^$', index, name='home'),
+    url(r'^(?P<slug>[-\w]+)/?$', prepopulate_agency, name='form'),
 )

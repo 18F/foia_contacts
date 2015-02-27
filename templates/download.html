@@ -1,0 +1,8 @@
+<h2>Download Page & Instructions</h2>
+
+<form action="/download/" method="post">
+    {% csrf_token %}
+    <input type="hidden" name='data' value="{{data}}">
+    <input type="hidden" name='download' value="True">
+    <input type="submit" value="Submit">
+</form>
